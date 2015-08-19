@@ -23,15 +23,14 @@ class DelegatingBuilder extends ContainerBuilder
     protected function getLoader(SymfonyBuilder $container, array $path)
     {
         $locator = new FileLocator($path);
+        $fileLoaders= array(
+            new XmlFileLoader($container, $locator),
+            new YamlFileLoader($container, $locator),
+            new PhpFileLoader($container, $locator)
+        );
 
         return new DelegatingLoader(
-            new LoaderResolver(
-                [
-                    new XmlFileLoader($container, $locator),
-                    new YamlFileLoader($container, $locator),
-                    new PhpFileLoader($container, $locator)
-                ]
-            )
+            new LoaderResolver($fileLoaders)
         );
     }
 }
